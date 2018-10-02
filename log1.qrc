@@ -1,0 +1,5 @@
+<RCC>
+  <qresource prefix="lo1">
+    <file>pep1.png</file>
+  </qresource>
+</RCC>

@@ -1,0 +1,5 @@
+<RCC>
+  <qresource prefix="lo2">
+    <file>virus.png</file>
+  </qresource>
+</RCC>
