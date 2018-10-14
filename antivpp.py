@@ -27,11 +27,6 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
 
         rfc = joblib.load('modelo_entrenado_2.pkl')
          
-        
-        #RF
-        rfc = RandomForestClassifier()
-        rfc.fit(descriptors,labels)
-        #scor_2 = rfc.score(descriptors,labels)
 
         #Data entry
 
