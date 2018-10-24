@@ -14,25 +14,11 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.bottonpred.clicked.connect(self.calculation) #Esto es para ordenar que cuando se presione vaya a calculo       
         
     def calculation(self):
-        from sklearn.ensemble import RandomForestClassifier
         from sklearn.externals import joblib
-        import pandas as pd
-
-        datos = pd.read_csv('data_training.csv')
-
-        #Separación de los datos
-
-        descriptors = datos[['netH','netCharge','molW','kyleD','a_a','c_c','d_d','e_e','f_f','g_g','h_h','i_i','k_k','l_l','m_m','n_n','p_p','q_q','r_r','s_s','t_t','v_v','w_w','y_y','tiny','small','large','aliphatic','aromatic','total_charged','negative_charged','positive_charged','polar','neutral','hydrophobic']]
-        labels = datos['label']
-
         rfc = joblib.load('modelo_entrenado_2.pkl')
-         
-
-        #Data entry
 
         paste_seq = str(self.pasteseq.toPlainText())
 
-        #Computing
         kyte_doolittle = {'A':1.80,'C':2.50,'D':-3.50,'E':-3.50,'F':2.80,
                      'G':-0.40,'H':-3.20,'I':4.50,'K':-3.90,'L':3.80,
                      'M':1.90,'N':-3.50,'P':-1.60,'Q':-3.50,'R':-4.50, 
