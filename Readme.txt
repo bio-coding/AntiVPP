@@ -2,7 +2,7 @@
 
 Steps to run AntiVPP:
 
-1- Download all the AntiVPP files available at:
+1- Download all the AntiVPP files
 
 2- Install WinPython 3.6.6.2Qt5-64 bit (*) available at: https://winpython.github.io/
 
