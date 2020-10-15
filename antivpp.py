@@ -197,32 +197,21 @@ def getResultsSeq(sequence, rfc):
         l_charge+m_charge+n_charge+p_charge+q_charge+r_charge + \
         s_charge+t_charge+v_charge+w_charge+y_charge
 
-    netH = round((a_hydrogen+c_hydrogen+d_hydrogen+e_hydrogen+f_hydrogen+g_hydrogen+h_hydrogen+i_hydrogen+k_hydrogen+l_hydrogen +
-                  m_hydrogen+n_hydrogen+p_hydrogen+q_hydrogen+r_hydrogen+s_hydrogen+t_hydrogen+v_hydrogen+w_hydrogen+y_hydrogen), 3)
+    netH = round((
+        a_hydrogen+c_hydrogen+d_hydrogen+e_hydrogen +
+        f_hydrogen+g_hydrogen+h_hydrogen+i_hydrogen +
+        k_hydrogen+l_hydrogen+m_hydrogen+n_hydrogen +
+        p_hydrogen+q_hydrogen+r_hydrogen+s_hydrogen +
+        t_hydrogen+v_hydrogen+w_hydrogen+y_hydrogen), 3)
 
-    # result = "Probable: " + str(rfc.predict([[netH, netCharge, molW, kyleD, a_a, c_c, d_d, e_e, f_f, g_g, h_h, i_i, k_k, l_l, m_m, n_n, p_p, q_q, r_r,
-    #                                           s_s, t_t, v_v, w_w, y_y, tiny, small, large, aliphatic, aromatic, total_charged, negative_charged, positive_charged, polar, neutral, hydrophobic]]))
-
-    # self.textpred.setText(str(result))
-    # self.textpred1.setText(str(aliphatic))
-    # self.textpred2.setText(str(negative_charged))
-    # self.textpred3.setText(str(aromatic))
-    # self.textpred4.setText(str(polar))
-    # self.textpred5.setText(str(neutral))
-    # self.textpred6.setText(str(hydrophobic))
-    # self.textpred7.setText(str(positive_charged))
-    # self.textpred8.setText(str(tiny))
-    # self.textpred9.setText(str(small))
-    # self.textpred10.setText(str(large))
-    # self.textpred11.setText(str(kyleD))
-    # self.textpred12.setText(str(molW))
-    # self.textpred13.setText(str(netCharge))
-    # self.textpred14.setText(str(netH))
-    # self.textpred15.setText(str(total_charged))
-    # self.textrelat.setText("A: " + str(a_a) + " , " + "C: " + str(c_c) + " , " + "D: " + str(d_d) + " , " + "E: " + str(e_e) + " , " + "F: " + str(f_f) + " , " + "E: " + str(e_e) + " , " + "G: " + str(g_g) + " , " + "I: " + str(i_i) + " , " + "K: " + str(k_k) + " , " + "L: " + str(l_l) + " , " + "M: " + str(m_m) + " , " + "N: " + str(n_n) + " , " + "P: " + str(p_p) + " , " + "Q: " + str(q_q) + " , " + "R: " + str(r_r) + " , " + "S: " + str(s_s) + " , " + "T: " + str(t_t) + " , " + "V: " + str(v_v) + " , " + "W: " + str(w_w) + " , " + "Y: " + str(y_y))
-
-    result = str(rfc.predict([[netH, netCharge, molW, kyleD, a_a, c_c, d_d, e_e, f_f, g_g, h_h, i_i, k_k, l_l, m_m, n_n, p_p, q_q, r_r,
-                               s_s, t_t, v_v, w_w, y_y, tiny, small, large, aliphatic, aromatic, total_charged, negative_charged, positive_charged, polar, neutral, hydrophobic]]))
+    result = str(rfc.predict([[
+        netH, netCharge, molW, kyleD,
+        a_a, c_c, d_d, e_e, f_f, g_g,
+        h_h, i_i, k_k, l_l, m_m, n_n,
+        p_p, q_q, r_r, s_s, t_t, v_v, w_w, y_y,
+        tiny, small, large, aliphatic, aromatic,
+        total_charged, negative_charged, positive_charged,
+        polar, neutral, hydrophobic]]))
 
     return result
 
