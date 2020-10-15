@@ -21,6 +21,10 @@ def read_fasta(fp):
         yield (name, ''.join(seq))
 
 
+def partialDictRoundedSum(d, keys):
+    return round(sum([d[k] for k in keys]), 3)
+
+
 def getResultsSeqClean(sequence, rfc):
     paste_seq = str(sequence)
     seq_size = len(paste_seq+str(0.000001))
@@ -50,56 +54,41 @@ def getResultsSeqClean(sequence, rfc):
 
     aa_counts = {k: paste_seq.count(k) for k in aa_list}
 
-    a_a = round(aa_counts["A"]/seq_size, 3)
-    c_c = round(aa_counts["C"]/seq_size, 3)
-    d_d = round(aa_counts["D"]/seq_size, 3)
-    e_e = round(aa_counts["E"]/seq_size, 3)
-    f_f = round(aa_counts["F"]/seq_size, 3)
-    g_g = round(aa_counts["G"]/seq_size, 3)
-    h_h = round(aa_counts["H"]/seq_size, 3)
-    i_i = round(aa_counts["I"]/seq_size, 3)
-    k_k = round(aa_counts["K"]/seq_size, 3)
-    l_l = round(aa_counts["L"]/seq_size, 3)
-    m_m = round(aa_counts["M"]/seq_size, 3)
-    n_n = round(aa_counts["N"]/seq_size, 3)
-    p_p = round(aa_counts["P"]/seq_size, 3)
-    q_q = round(aa_counts["Q"]/seq_size, 3)
-    r_r = round(aa_counts["R"]/seq_size, 3)
-    s_s = round(aa_counts["S"]/seq_size, 3)
-    t_t = round(aa_counts["T"]/seq_size, 3)
-    v_v = round(aa_counts["V"]/seq_size, 3)
-    w_w = round(aa_counts["W"]/seq_size, 3)
-    y_y = round(aa_counts["Y"]/seq_size, 3)
+    aa_perc = {k: round(aa_counts[k]/seq_size, 3) for k in aa_list}
 
     # PROPERTIES Q-P
 
-    aliphatic = round((i_i + l_l + v_v), 3)
+    aliphatic = partialDictRoundedSum(aa_perc, ['I', 'V', 'L'])
 
-    negative_charged = round((d_d + e_e), 3)
+    negative_charged = partialDictRoundedSum(aa_perc, ['D', 'E'])
 
-    total_charged = round((d_d + e_e + k_k + h_h + r_r), 3)
+    total_charged = partialDictRoundedSum(aa_perc, ['D', 'E', 'K', 'H', 'R'])
 
-    aromatic = round((f_f + h_h + w_w + y_y), 3)
+    aromatic = partialDictRoundedSum(aa_perc, ['F', 'H', 'W', 'Y'])
 
-    polar = round((d_d + e_e + r_r + k_k + q_q + n_n), 3)
+    polar = partialDictRoundedSum(aa_perc, ['D', 'E', 'R', 'K', 'Q', 'N'])
 
-    neutral = round((a_a + g_g + h_h + p_p + s_s + t_t + y_y), 3)
+    neutral = partialDictRoundedSum(aa_perc,
+                                    ['A', 'G', 'H', 'P', 'S', 'T', 'Y'])
 
-    hydrophobic = round((c_c + f_f + i_i + l_l + m_m + v_v + w_w), 3)
+    hydrophobic = partialDictRoundedSum(aa_perc,
+                                        ['C', 'F', 'I', 'L', 'M', 'V', 'W'])
 
-    positive_charged = round((k_k + r_r + h_h), 3)
+    positive_charged = partialDictRoundedSum(aa_perc, ['K', 'R', 'H'])
 
-    tiny = round((a_a + c_c + d_d + g_g + s_s + t_t), 3)
+    tiny = partialDictRoundedSum(aa_perc, ['A', 'C', 'D', 'G', 'S', 'T'])
 
-    small = round((e_e + h_h + i_i + l_l + k_k +
-                   m_m + n_n + p_p + q_q + v_v), 3)
+    small = partialDictRoundedSum(aa_perc,
+                                  ['E', 'H', 'I', 'L', 'K', 'M', 'N', 'P', 'Q', 'V'])
 
-    large = round((f_f + r_r + w_w + y_y), 3)
+    large = partialDictRoundedSum(aa_perc, ['F', 'R', 'W', 'Y'])
 
     # SCALES
 
-    kyleD = round(sum([aa_counts[k]*kyte_doolittle[k]
-                       for k in aa_list])/seq_size, 3)
+    kyleD = round(
+        sum(
+            [aa_counts[k]*kyte_doolittle[k] for k in aa_list]
+        )/seq_size, 3)
 
     molW = round(sum([aa_counts[k]*molecular_weigth[k] for k in aa_list]), 3)
 
@@ -107,14 +96,12 @@ def getResultsSeqClean(sequence, rfc):
 
     netH = round(sum([aa_counts[k]*net_hydrogen[k] for k in aa_list]), 3)
 
-    result = rfc.predict([[
-        netH, netCharge, molW, kyleD,
-        a_a, c_c, d_d, e_e, f_f, g_g,
-        h_h, i_i, k_k, l_l, m_m, n_n,
-        p_p, q_q, r_r, s_s, t_t, v_v, w_w, y_y,
-        tiny, small, large, aliphatic, aromatic,
-        total_charged, negative_charged, positive_charged,
-        polar, neutral, hydrophobic]])
+    result = rfc.predict([
+        [netH, netCharge, molW, kyleD] +
+        [v for v in aa_perc.values()] +
+        [tiny, small, large, aliphatic, aromatic,
+         total_charged, negative_charged, positive_charged,
+         polar, neutral, hydrophobic]])
 
     return str(result)
 
@@ -321,7 +308,7 @@ def getResultsFile(filename):
         print('Name\tPredicted_Antiviral\tNew\tSequence\n')
         for name, seq in read_fasta(fp):
             result = getResultsSeq(seq, rfc)
-            new_result = getResultsSeq(seq, rfc)
+            new_result = getResultsSeqClean(seq, rfc)
             print('{}\t{}\t{}\t{}'.format(
                 name.replace('>', ''),
                 result.replace('[', '').replace(']', '').strip(),
