@@ -231,8 +231,14 @@ def getResultsFile(filename):
     rfc = joblib.load('modelo_entrenado_2.pkl')
 
     with open(filename) as fp:
+        print('Name\tPredicted_Antiviral\tSequence\n')
         for name, seq in read_fasta(fp):
-            print(name, seq, getResultsSeq(seq, rfc))
+            result = getResultsSeq(seq, rfc)
+            print('{}\t{}\t{}'.format(
+                name.replace('>', ''),
+                result.replace('[', '').replace(']', '').strip(),
+                seq
+            ))
 
 
 class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
@@ -445,4 +451,13 @@ if __name__ == "__main__":
         window.show()
         sys.exit(app.exec_())
     else:
-        print(getResultsFile(sys.argv[-1]))
+        if sys.argv[-1] == '--help':
+            print(
+                "Usage:\n"
+                "For UI version:\n"
+                "\tpython antivpp.py\n"
+                "For getting results from fasta file:\n"
+                "\tpython antivpp.py [fasta filename] > [tsv filename]\n"
+                "\nUse relative paths\n")
+        else:
+            print(getResultsFile(sys.argv[-1]))
