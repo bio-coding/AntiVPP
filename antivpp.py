@@ -47,6 +47,7 @@ def getResultsSeqClean(sequence, rfc):
 
     aa_list = ['A', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L',
                'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'V', 'W', 'Y']
+
     aa_counts = {k: paste_seq.count(k) for k in aa_list}
 
     a_a = round(aa_counts["A"]/seq_size, 3)
@@ -69,27 +70,6 @@ def getResultsSeqClean(sequence, rfc):
     v_v = round(aa_counts["V"]/seq_size, 3)
     w_w = round(aa_counts["W"]/seq_size, 3)
     y_y = round(aa_counts["Y"]/seq_size, 3)
-
-    a_hydrogen = aa_counts["A"]*net_hydrogen["A"]
-    c_hydrogen = aa_counts["C"]*net_hydrogen["C"]
-    d_hydrogen = aa_counts["D"]*net_hydrogen["D"]
-    e_hydrogen = aa_counts["E"]*net_hydrogen["E"]
-    f_hydrogen = aa_counts["F"]*net_hydrogen["F"]
-    g_hydrogen = aa_counts["G"]*net_hydrogen["G"]
-    h_hydrogen = aa_counts["H"]*net_hydrogen["H"]
-    i_hydrogen = aa_counts["I"]*net_hydrogen["I"]
-    k_hydrogen = aa_counts["K"]*net_hydrogen["K"]
-    l_hydrogen = aa_counts["L"]*net_hydrogen["L"]
-    m_hydrogen = aa_counts["M"]*net_hydrogen["M"]
-    n_hydrogen = aa_counts["N"]*net_hydrogen["N"]
-    p_hydrogen = aa_counts["P"]*net_hydrogen["P"]
-    q_hydrogen = aa_counts["Q"]*net_hydrogen["Q"]
-    r_hydrogen = aa_counts["R"]*net_hydrogen["R"]
-    s_hydrogen = aa_counts["S"]*net_hydrogen["S"]
-    t_hydrogen = aa_counts["T"]*net_hydrogen["T"]
-    v_hydrogen = aa_counts["V"]*net_hydrogen["V"]
-    w_hydrogen = aa_counts["W"]*net_hydrogen["W"]
-    y_hydrogen = aa_counts["Y"]*net_hydrogen["Y"]
 
     # PROPERTIES Q-P
 
@@ -125,23 +105,18 @@ def getResultsSeqClean(sequence, rfc):
 
     netCharge = sum([aa_counts[k]*net_charge[k] for k in aa_list])
 
-    netH = round((
-        a_hydrogen+c_hydrogen+d_hydrogen+e_hydrogen +
-        f_hydrogen+g_hydrogen+h_hydrogen+i_hydrogen +
-        k_hydrogen+l_hydrogen+m_hydrogen+n_hydrogen +
-        p_hydrogen+q_hydrogen+r_hydrogen+s_hydrogen +
-        t_hydrogen+v_hydrogen+w_hydrogen+y_hydrogen), 3)
+    netH = round(sum([aa_counts[k]*net_hydrogen[k] for k in aa_list]), 3)
 
-    result = str(rfc.predict([[
+    result = rfc.predict([[
         netH, netCharge, molW, kyleD,
         a_a, c_c, d_d, e_e, f_f, g_g,
         h_h, i_i, k_k, l_l, m_m, n_n,
         p_p, q_q, r_r, s_s, t_t, v_v, w_w, y_y,
         tiny, small, large, aliphatic, aromatic,
         total_charged, negative_charged, positive_charged,
-        polar, neutral, hydrophobic]]))
+        polar, neutral, hydrophobic]])
 
-    return result
+    return str(result)
 
 
 def getResultsSeq(sequence, rfc):
